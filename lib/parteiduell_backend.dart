@@ -35,7 +35,8 @@ run() async {
   scoreboard = json.decode(File('data/db/scoreboard.json').readAsStringSync());
 
   // Starten des Servers
-  var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
+  var server = await HttpServer.bind(
+      InternetAddress.loopbackIPv4, Platform.environment['PORT'] ?? 3000);
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
