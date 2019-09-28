@@ -188,7 +188,7 @@ execute(HttpRequest request) async {
     "answer": "NPD",
     "source": "wahlometer.watch",
     "context": "Bundestagswahl 2017",
-    "statement": "Der Ausbau erneuerbarer Energien ist nicht nur aus Gr��nden des Umweltschutzes, sondern auch zur Erlangung größerer Unabhängigkeit von Energie-Importen aus dem Ausland grundsätzlich zu begrüßen. Bei der Förderung sollte allerdings ein Schwerpunkt auf die Erforschung geeigneter Speichertechnologien gelegt werden, um eine bessere dezentrale Verfügbarkeit zu erreichen, Energieverluste zu vermeiden und auf gigantische und die Landschaft verschandelnde Windparks verzichten zu können.",
+    "statement": "Der Ausbau erneuerbarer Energien ist nicht nur aus Gründen des Umweltschutzes, sondern auch zur Erlangung größerer Unabhängigkeit von Energie-Importen aus dem Ausland grundsätzlich zu begrüßen. Bei der Förderung sollte allerdings ein Schwerpunkt auf die Erforschung geeigneter Speichertechnologien gelegt werden, um eine bessere dezentrale Verfügbarkeit zu erreichen, Energieverluste zu vermeiden und auf gigantische und die Landschaft verschandelnde Windparks verzichten zu können.",
     "possibleParties": [
       "AfD",
       "NPD",
