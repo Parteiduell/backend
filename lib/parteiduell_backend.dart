@@ -39,7 +39,7 @@ run() async {
   var port = portEnv == null ? 3000 : int.parse(portEnv);
 
   // Starten des Servers
-  var server = await HttpServer.bind("127.0.0.1", port);
+  var server = await HttpServer.bind('0.0.0.0', port);
 
   print("Serving at ${server.address}:${server.port}");
 
