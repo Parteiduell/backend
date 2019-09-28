@@ -23,7 +23,7 @@ class QuizQuestion {
     source = json['source'];
     context = json['context'];
     statement = json['statement'];
-    possibleParties = json['possibleParties'];
+    possibleParties = json['possibleParties'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {

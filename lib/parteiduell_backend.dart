@@ -86,8 +86,11 @@ execute(HttpRequest request) async {
 
           for (String s in toReplace) {
             statement = statement.replaceAll(
-                RegExp('' + s + '\s', caseSensitive: false), '█████');
+                RegExp('' + s + '', caseSensitive: false), '█████');
           }
+          if (statement.trim().length == 0)
+            statement =
+                'Diese Partei hat keine Erklärung zu dieser These abgegeben.';
 
           question.possibleAnswers[key] = statement;
         }
