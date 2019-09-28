@@ -86,12 +86,13 @@ execute(HttpRequest request) async {
 
           for (String s in toReplace) {
             statement = statement.replaceAll(
-                RegExp('' + s + '', caseSensitive: false), '█████');
+                RegExp('' + s + '\s', caseSensitive: false), '█████');
           }
 
           question.possibleAnswers[key] = statement;
         }
         question.statement = question.possibleAnswers[party];
+        question.possibleParties = parties;
 
         questions.add(question);
       }
