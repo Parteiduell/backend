@@ -68,13 +68,14 @@ execute(HttpRequest request) async {
         question.answer = party;
 
         question.possibleAnswers = {};
+        parties.shuffle();
         for (String key in parties) {
           List<String> toReplace = [key];
           String statement = these.statements[key];
 
           switch (key) {
             case 'CDU/CSU':
-              toReplace.addAll(['CDU', 'CSU']);
+              toReplace.addAll(['CDU', 'CSU', 'CDU und CSU']);
               break;
             case 'FDP':
               statement = statement.replaceAll('Freie Demokraten ', '');
