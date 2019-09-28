@@ -58,7 +58,8 @@ saveScoreboard() async {
 // Bearbeitung der Anfragen
 execute(HttpRequest request) async {
   HttpResponse response = request.response;
-  response.headers.contentType = ContentType("application", "json", charset: "utf-8");
+  response.headers.contentType =
+      ContentType("application", "json", charset: "utf-8");
 
   response.headers.add('Access-Control-Allow-Origin', '*');
 
@@ -92,16 +93,16 @@ execute(HttpRequest request) async {
           if (key == party) {
             switch (key) {
               case 'CDU/CSU':
-                toReplace.addAll(['CDU und CSU', 'CDU', 'CSU']);
+                toReplace.insertAll(0, ['CDU und CSU', 'CDU', 'CSU']);
                 break;
               case 'FDP':
                 statement = statement.replaceAll('Freie Demokraten ', '');
                 break;
               case 'GRÜNE':
-                toReplace.addAll(['BÜNDNIS 90/DIE GRÜNEN']);
+                toReplace.insertAll(0, ['BÜNDNIS 90/DIE GRÜNEN']);
                 break;
               case 'PIRATEN':
-                toReplace.addAll(['PIRATENpartei']);
+                toReplace.insertAll(0, ['PIRATENpartei']);
                 break;
             }
 
