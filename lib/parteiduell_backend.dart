@@ -39,6 +39,8 @@ run() async {
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
+    print(
+        '[${DateTime.now().toIso8601String()}] ${request.method} from ${request.connectionInfo.remoteAddress} at ${request.uri}');
     try {
       await execute(request);
     } catch (e) {
