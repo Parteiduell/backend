@@ -58,6 +58,7 @@ saveScoreboard() async {
 // Bearbeitung der Anfragen
 execute(HttpRequest request) async {
   HttpResponse response = request.response;
+  response.headers.contentType = ContentType("application", "json", charset: "utf-8");
 
   response.headers.add('Access-Control-Allow-Origin', '*');
 
