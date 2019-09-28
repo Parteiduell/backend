@@ -41,7 +41,7 @@ run() async {
       .toList();
 
   // Starten des Servers
-  var server = await HttpServer.bind(InternetAddress.anyIPv4, 8080);
+  var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
@@ -56,7 +56,8 @@ execute(HttpRequest request) async {
   if (request.uri.path == '/list') {
     if (request.method == 'GET') {
       quizFragen.shuffle();
-      response.write(json.encode(quizFragen.take(10).toList()));
+
+      request.response.write(json.encode(quizFragen.take(10).toList()));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
