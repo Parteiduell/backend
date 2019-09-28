@@ -58,7 +58,8 @@ saveScoreboard() async {
 // Bearbeitung der Anfragen
 execute(HttpRequest request) async {
   HttpResponse response = request.response;
-  response.headers.contentType = ContentType("application", "json", charset: "utf-8");
+  response.headers.contentType =
+      ContentType("application", "json", charset: "utf-8");
 
   response.headers.add('Access-Control-Allow-Origin', '*');
 
@@ -152,6 +153,12 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/scoreboard') {
     if (request.method == 'GET') {
       request.response.write(json.encode(scoreboard));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/ping') {
+    if (request.method == 'GET') {
+      request.response.write("Pong!");
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
