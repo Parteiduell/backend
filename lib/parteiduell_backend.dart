@@ -64,9 +64,26 @@ execute(HttpRequest request) async {
 
         question.possibleAnswers = {};
         for (String key in parties) {
-          question.possibleAnswers[key] = these.statements[key]
-              .replaceAll(RegExp('' + key + '', caseSensitive: false), '█████');
+          List<String> toReplace = [key];
+          String statement = these.statements[key];
+
+          switch (key) {
+            case 'CDU/CSU':
+              toReplace.addAll(['CDU', 'CSU']);
+              break;
+            case 'FDP':
+              toReplace.addAll(['freie demokraten']);
+              break;
+          }
+
+          for (String s in toReplace) {
+            statement = statement.replaceAll(
+                RegExp('' + s + '', caseSensitive: false), '█████');
+          }
+
+          question.possibleAnswers[key] = statement;
         }
+        question.statement=question.possibleAnswers[party];
 
         questions.add(question);
       }
