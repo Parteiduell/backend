@@ -42,7 +42,7 @@ execute(HttpRequest request) async {
 
   if (request.uri.path == '/list') {
     if (request.method == 'GET') {
-      int count = int.tryParse(request.uri.queryParameters['count']) ?? 1;
+      int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
       quizFragen.shuffle();
 
       List<QuizQuestion> questions = [];
