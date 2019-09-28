@@ -17,22 +17,25 @@ import 'package:parteiduell_backend/models/quizthese.dart';
 
 run() {
   var content =
-      json.decode(File('data/wahlometer-watch.json').readAsStringSync());
+      json.decode(File('data/source/wahlometer-watch.json').readAsStringSync());
 
-  var result = [];
+  for (Map occasion in content) {
+    var result = [];
 
-  for (var these in content.last['theses']) {
-    Map statements = {};
-    for (Map position in these['positions']) {
-      statements[position['party']] = position['text'];
+    for (var these in occasion['theses']) {
+      Map statements = {};
+      for (Map position in these['positions']) {
+        statements[position['party']] = position['text'];
+      }
+
+      result.add(QuizThese(
+          these: these['text'],
+          statements: statements,
+          source: "wahlometer.watch",
+          context: occasion['occasion']['title']));
     }
 
-    result.add(QuizThese(
-        these: these['text'],
-        statements: statements,
-        source: "wahlometer.watch",
-        context: "Bundestagswahl 2017"));
+    File("data/wahlomat/quizQuestions - ${occasion['occasion']['title']}.json")
+        .writeAsStringSync(json.encode(result));
   }
-
-  File("data/quizQuestions.json").writeAsStringSync(json.encode(result));
 }

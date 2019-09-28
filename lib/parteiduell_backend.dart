@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-List<QuizThese> quizFragen;
+List<QuizThese> quizFragen = [];
 
 List<String> commonParties = [
   "SPD",
@@ -21,11 +21,14 @@ List<String> commonParties = [
 
 run() async {
   print('Loading DB...');
+
   // Einlesen der Daten
-  quizFragen = json
-      .decode(File('data/quizQuestions.json').readAsStringSync())
-      .map<QuizThese>((m) => QuizThese.fromJson(m))
-      .toList();
+  for (File file in Directory('data/release').listSync())
+    quizFragen.addAll(json
+        .decode(file.readAsStringSync())
+        .map<QuizThese>((m) => QuizThese.fromJson(m)));
+
+  print('Loaded. These Count: ${quizFragen.length}');
 
   // Starten des Servers
   var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
