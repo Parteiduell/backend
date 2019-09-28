@@ -1,17 +1,30 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
-import 'models/quizfrage.dart';
+import 'package:parteiduell_backend/models/quiz_question.dart';
+import 'package:parteiduell_backend/models/quizthese.dart';
 
+List<QuizThese> quizFragen;
 
-List<QuizFrage> quizFragen;
+List<String> commonParties = [
+  "SPD",
+  "CDU/CSU",
+  "GRÜNE",
+  "FDP",
+  "PIRATEN",
+  "DIE LINKE",
+  "NPD",
+  "Die PARTEI",
+  "AfD"
+];
 
 run() async {
   print('Loading DB...');
   // Einlesen der Daten
   quizFragen = json
-      .decode(File('data/quizFragen.json').readAsStringSync())
-      .map<QuizFrage>((m) => QuizFrage.fromJson(m))
+      .decode(File('data/quizQuestions.json').readAsStringSync())
+      .map<QuizThese>((m) => QuizThese.fromJson(m))
       .toList();
 
   // Starten des Servers
@@ -21,7 +34,6 @@ run() async {
   await for (var request in server) {
     execute(request);
   }
-  
 }
 
 // Bearbeitung der Anfragen
@@ -30,9 +42,36 @@ execute(HttpRequest request) async {
 
   if (request.uri.path == '/list') {
     if (request.method == 'GET') {
+      int count = int.tryParse(request.uri.queryParameters['count']) ?? 1;
       quizFragen.shuffle();
 
-      request.response.write(json.encode(quizFragen.take(10).toList()));
+      List<QuizQuestion> questions = [];
+
+      for (QuizThese these in quizFragen.take(count)) {
+        var question = QuizQuestion(
+            context: these.context, source: these.source, these: these.these);
+
+        List<String> parties = these.statements.keys.toList();
+        //print(parties);
+        parties.removeWhere((p) => !commonParties.contains(p));
+
+        parties.shuffle();
+        parties = parties.take(4).toList();
+
+        String party = parties.first;
+
+        question.answer = party;
+
+        question.possibleAnswers = {};
+        for (String key in parties) {
+          question.possibleAnswers[key] = these.statements[key]
+              .replaceAll(RegExp('' + key + '', caseSensitive: false), '█████');
+        }
+
+        questions.add(question);
+      }
+
+      request.response.write(json.encode(questions));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
