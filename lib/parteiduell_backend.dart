@@ -7,6 +7,8 @@ import 'package:parteiduell_backend/models/quizthese.dart';
 
 List<QuizThese> quizFragen = [];
 
+List scoreboard = [];
+
 List<String> commonParties = [
   "SPD",
   "CDU/CSU",
@@ -30,13 +32,24 @@ run() async {
 
   print('Loaded. These Count: ${quizFragen.length}');
 
+  scoreboard = json.decode(File('data/db/scoreboard.json').readAsStringSync());
+
   // Starten des Servers
   var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 3000);
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
-    execute(request);
+    try {
+      await execute(request);
+    } catch (e) {
+      request.response.statusCode = HttpStatus.internalServerError;
+      request.response.close();
+    }
   }
+}
+
+saveScoreboard() async {
+  File('data/db/scoreboard.json').writeAsString(json.encode(scoreboard));
 }
 
 // Bearbeitung der Anfragen
@@ -102,6 +115,35 @@ execute(HttpRequest request) async {
       }
 
       request.response.write(json.encode(questions));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/submitScore') {
+    if (request.method == 'POST') {
+      String content = await utf8.decoder.bind(request).join();
+      var data = json.decode(content);
+
+      // Limits
+      // Name: 20 Chars
+      // Score: 100
+      if (data['score'] > 100 || data['score'] < 0) {
+        response.statusCode = HttpStatus.badRequest;
+      } else if (data['name'].length > 20 || data['name'].length == 0) {
+        response.statusCode = HttpStatus.badRequest;
+      } else {
+        scoreboard.add({'name': data['name'], 'score': data['score']});
+        scoreboard.sort((a, b) => -a['score'].compareTo(b['score']));
+        if (scoreboard.length > 10) {
+          scoreboard.removeRange(10, scoreboard.length);
+        }
+        saveScoreboard();
+      }
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/scoreboard') {
+    if (request.method == 'GET') {
+      request.response.write(json.encode(scoreboard));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
