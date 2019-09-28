@@ -1,4 +1,4 @@
-import 'package:parteiduell_backend/parteiduell_backend.dart';
+/* import 'package:parteiduell_backend/parteiduell_backend.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -6,3 +6,4 @@ void main() {
     expect(calculate(), 42);
   });
 }
+ */
