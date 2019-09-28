@@ -40,6 +40,8 @@ run() async {
 execute(HttpRequest request) async {
   HttpResponse response = request.response;
 
+  response.headers.add('Access-Control-Allow-Origin', '*');
+
   if (request.uri.path == '/list') {
     if (request.method == 'GET') {
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
@@ -72,7 +74,10 @@ execute(HttpRequest request) async {
               toReplace.addAll(['CDU', 'CSU']);
               break;
             case 'FDP':
-              toReplace.addAll(['freie demokraten']);
+              statement = statement.replaceAll('Freie Demokraten ', '');
+              break;
+            case 'GRÜNE':
+              toReplace.addAll(['BÜNDNIS 90/DIE GRÜNEN']);
               break;
           }
 
@@ -83,7 +88,7 @@ execute(HttpRequest request) async {
 
           question.possibleAnswers[key] = statement;
         }
-        question.statement=question.possibleAnswers[party];
+        question.statement = question.possibleAnswers[party];
 
         questions.add(question);
       }
