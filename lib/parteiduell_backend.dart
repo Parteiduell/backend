@@ -34,9 +34,13 @@ run() async {
 
   scoreboard = json.decode(File('data/db/scoreboard.json').readAsStringSync());
 
+  // Server Port
+  var portEnv = Platform.environment['PORT'];
+  var port = portEnv == null ? 3000 : int.parse(portEnv);
+
   // Starten des Servers
-  var server = await HttpServer.bind(InternetAddress.loopbackIPv4,
-      int.tryParse(Platform.environment['PORT'] ?? '') ?? 3000);
+  var server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
+
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
@@ -63,7 +67,14 @@ execute(HttpRequest request) async {
 
   response.headers.add('Access-Control-Allow-Origin', '*');
 
-  if (request.uri.path == '/list') {
+  if (request.uri.path == '/') {
+    if (request.method == 'GET') {
+      request.response.redirect(
+          new Uri.https("github.com", "Jugendhackt/parteiduell-backend"));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/list') {
     if (request.method == 'GET') {
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
       quizFragen.shuffle();
@@ -177,7 +188,7 @@ execute(HttpRequest request) async {
     "answer": "NPD",
     "source": "wahlometer.watch",
     "context": "Bundestagswahl 2017",
-    "statement": "Der Ausbau erneuerbarer Energien ist nicht nur aus Gründen des Umweltschutzes, sondern auch zur Erlangung größerer Unabhängigkeit von Energie-Importen aus dem Ausland grundsätzlich zu begrüßen. Bei der Förderung sollte allerdings ein Schwerpunkt auf die Erforschung geeigneter Speichertechnologien gelegt werden, um eine bessere dezentrale Verfügbarkeit zu erreichen, Energieverluste zu vermeiden und auf gigantische und die Landschaft verschandelnde Windparks verzichten zu können.",
+    "statement": "Der Ausbau erneuerbarer Energien ist nicht nur aus Gr��nden des Umweltschutzes, sondern auch zur Erlangung größerer Unabhängigkeit von Energie-Importen aus dem Ausland grundsätzlich zu begrüßen. Bei der Förderung sollte allerdings ein Schwerpunkt auf die Erforschung geeigneter Speichertechnologien gelegt werden, um eine bessere dezentrale Verfügbarkeit zu erreichen, Energieverluste zu vermeiden und auf gigantische und die Landschaft verschandelnde Windparks verzichten zu können.",
     "possibleParties": [
       "AfD",
       "NPD",
