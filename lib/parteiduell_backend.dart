@@ -91,13 +91,16 @@ execute(HttpRequest request) async {
           if (key == party) {
             switch (key) {
               case 'CDU/CSU':
-                toReplace.addAll(['CDU', 'CSU', 'CDU und CSU']);
+                toReplace.addAll(['CDU und CSU', 'CDU', 'CSU']);
                 break;
               case 'FDP':
                 statement = statement.replaceAll('Freie Demokraten ', '');
                 break;
               case 'GRÜNE':
                 toReplace.addAll(['BÜNDNIS 90/DIE GRÜNEN']);
+                break;
+              case 'PIRATEN':
+                toReplace.addAll(['PIRATENpartei']);
                 break;
             }
 
