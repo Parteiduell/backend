@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
@@ -34,9 +33,13 @@ run() async {
 
   scoreboard = json.decode(File('data/db/scoreboard.json').readAsStringSync());
 
+  // Server Port
+  var portEnv = Platform.environment['PORT'];
+  var port = portEnv == null ? 3000 : int.parse(portEnv);
+
   // Starten des Servers
-  var server = await HttpServer.bind(InternetAddress.loopbackIPv4,
-      int.tryParse(Platform.environment['PORT'] ?? '') ?? 3000);
+  var server = await HttpServer.bind('0.0.0.0', port);
+
   print("Serving at ${server.address}:${server.port}");
 
   await for (var request in server) {
@@ -63,7 +66,14 @@ execute(HttpRequest request) async {
 
   response.headers.add('Access-Control-Allow-Origin', '*');
 
-  if (request.uri.path == '/list') {
+  if (request.uri.path == '/') {
+    if (request.method == 'GET') {
+      request.response.redirect(
+          new Uri.https("github.com", "Jugendhackt/parteiduell-backend"));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/list') {
     if (request.method == 'GET') {
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
       quizFragen.shuffle();
@@ -156,6 +166,12 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/scoreboard') {
     if (request.method == 'GET') {
       request.response.write(json.encode(scoreboard));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/ping') {
+    if (request.method == 'GET') {
+      request.response.write("Pong!");
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
