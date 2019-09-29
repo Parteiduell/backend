@@ -93,7 +93,7 @@ execute(HttpRequest request) async {
           if (key == party) {
             switch (key) {
               case 'CDU/CSU':
-                toReplace.insertAll(0, ['CDU und CSU', 'CDU', 'CSU']);
+                toReplace.insertAll(0, ['CDU / CSU','CDU/CSU','Union', 'CDU und CSU', 'CDU', 'CSU']);
                 break;
               case 'FDP':
                 statement = statement.replaceAll('Freie Demokraten ', '');
@@ -103,6 +103,9 @@ execute(HttpRequest request) async {
                 break;
               case 'PIRATEN':
                 toReplace.insertAll(0, ['PIRATENpartei']);
+                break;
+              case 'AfD':
+                toReplace.insertAll(0, ['alternative für deutschland']);
                 break;
             }
 
