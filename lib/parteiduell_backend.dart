@@ -106,7 +106,7 @@ execute(HttpRequest request) async {
                 toReplace.insertAll(0, ['CDU / CSU','CDU/CSU','Union', 'CDU und CSU', 'CDU', 'CSU']);
                 break;
               case 'FDP':
-                statement = statement.replaceAll('Freie Demokraten ', '');
+                statement = statement.replaceAll('Freie Demokraten ', 'Freien Demokraten');
                 break;
               case 'GRÜNE':
                 toReplace.insertAll(0, ['BÜNDNIS 90/DIE GRÜNEN']);
