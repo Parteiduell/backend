@@ -130,7 +130,7 @@ execute(HttpRequest request) async {
                 ]);
                 break;
               case 'FDP':
-                statement = statement.replaceAll('Freie Demokraten ', '');
+                statement = statement.replaceAll('Freie Demokraten ', 'Freien Demokraten');
                 break;
               case 'GRÜNE':
                 toReplace.insertAll(
