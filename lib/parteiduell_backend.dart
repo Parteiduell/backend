@@ -86,6 +86,8 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/list') {
     if (request.method == 'GET') {
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
+      bool filterWithTag =
+          (request.uri.queryParameters['filterWithTag'] ?? 'false') == 'true';
       quizFragen.shuffle();
 
       List<QuizQuestion> questions = [];
@@ -130,7 +132,8 @@ execute(HttpRequest request) async {
                 ]);
                 break;
               case 'FDP':
-                statement = statement.replaceAll('Freie Demokraten ', 'Freien Demokraten');
+                statement = statement.replaceAll(
+                    'Freie Demokraten ', 'Freien Demokraten');
                 break;
               case 'GRÜNE':
                 toReplace.insertAll(
@@ -146,7 +149,8 @@ execute(HttpRequest request) async {
 
             for (String s in toReplace) {
               statement = statement.replaceAll(
-                  RegExp('' + s + '', caseSensitive: false), '█████');
+                  RegExp('' + s + '', caseSensitive: false),
+                  filterWithTag ? '<filtered>' : '█████');
             }
           }
           if (statement.trim().length == 0)
