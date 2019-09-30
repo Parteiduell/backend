@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
+const apiVersion = 2;
+
 List<QuizThese> quizFragen = [];
 
 List scoreboard = [];
@@ -20,7 +22,15 @@ List<String> commonParties = [
   "AfD"
 ];
 
-run() async {
+bool debugOutputEnabled = false;
+
+debugPrint(s) {
+  if (debugOutputEnabled) print(s.toString());
+}
+
+run({bool debug}) async {
+  debugOutputEnabled = debug;
+
   print('Loading DB...');
 
   // Einlesen der Daten
@@ -85,8 +95,15 @@ execute(HttpRequest request) async {
             context: these.context, source: these.source, these: these.these);
 
         List<String> parties = these.statements.keys.toList();
-        //print(parties);
+
+        // Unbekannte Parteien herausfiltern
+        // TODO: Möglichkeit, per API Parameter weitere Parteien der Auswahl hinzuzufügen
         parties.removeWhere((p) => !commonParties.contains(p));
+
+        // Entfernen von Parteien, die keine Antwort abgegeben haben
+        parties.removeWhere((p) => these.statements[p].isEmpty);
+        debugPrint('Parteien: $parties');
+        debugPrint('${parties.length}/${commonParties.length}');
 
         parties.shuffle();
         parties = parties.take(4).toList();
@@ -103,13 +120,21 @@ execute(HttpRequest request) async {
           if (key == party) {
             switch (key) {
               case 'CDU/CSU':
-                toReplace.insertAll(0, ['CDU / CSU','CDU/CSU','Union', 'CDU und CSU', 'CDU', 'CSU']);
+                toReplace.insertAll(0, [
+                  'CDU / CSU',
+                  'CDU/CSU',
+                  'Union',
+                  'CDU und CSU',
+                  'CDU',
+                  'CSU'
+                ]);
                 break;
               case 'FDP':
                 statement = statement.replaceAll('Freie Demokraten ', '');
                 break;
               case 'GRÜNE':
-                toReplace.insertAll(0, ['BÜNDNIS 90/DIE GRÜNEN']);
+                toReplace.insertAll(
+                    0, ['BÜNDNIS 90 / DIE GRÜNEN', 'BÜNDNIS 90/DIE GRÜNEN']);
                 break;
               case 'PIRATEN':
                 toReplace.insertAll(0, ['PIRATENpartei']);
@@ -172,6 +197,12 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/ping') {
     if (request.method == 'GET') {
       request.response.write("Pong!");
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/version') {
+    if (request.method == 'GET') {
+      request.response.write('API Version: $apiVersion');
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
