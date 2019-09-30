@@ -11,11 +11,14 @@ Das Backend für [parteiduell_frontend](https://github.com/Jugendhackt/parteidue
 2. Backend lokal clonen
 `git clone https://github.com/Jugendhackt/parteiduell-backend`
 
-3. Projekt initialisieren
+3. Ordner wechseln
+`cd parteiduell-backend`
+
+4. Projekt initialisieren
 `pub get` - 
 alternativ (Linux): `/usr/lib/dart/bin/pub get`
 
-4. Server starten
+5. Server starten
 `dart bin/main.dart`
 
 Der Server läuft jetzt standardmäßig unter `localhost:3000`.
