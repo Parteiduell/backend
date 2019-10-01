@@ -129,7 +129,7 @@ execute(HttpRequest request) async {
         question.possibleAnswers = {};
         parties.shuffle();
         for (String key in parties) {
-          List<String> toReplace = [key];
+          List toReplace = [key];
           String statement = these.statements[key];
           if (key == party) {
             switch (key) {
@@ -137,7 +137,7 @@ execute(HttpRequest request) async {
                 toReplace.insertAll(0, [
                   'CDU / CSU',
                   'CDU/CSU',
-                  'Union',
+                  RegExp(r'(?<!(Europäischen|Europäische) )Union'),
                   'CDU und CSU',
                   'CDU',
                   'CSU'
@@ -159,9 +159,9 @@ execute(HttpRequest request) async {
                 break;
             }
 
-            for (String s in toReplace) {
+            for (var s in toReplace) {
               statement = statement.replaceAll(
-                  RegExp('' + s + '', caseSensitive: false),
+                  s is String ? RegExp('' + s + '', caseSensitive: false) : s,
                   filterWithTag ? '<filtered>' : '█████');
             }
           }
