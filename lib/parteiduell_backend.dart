@@ -97,6 +97,7 @@ execute(HttpRequest request) async {
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
       bool filterWithTag =
           (request.uri.queryParameters['filterWithTag'] ?? 'false') == 'true';
+      String reqParties = request.uri.queryParameters['parties'] ?? '';
       quizFragen.shuffle();
 
       List<QuizQuestion> questions = [];
@@ -107,14 +108,16 @@ execute(HttpRequest request) async {
 
         List<String> parties = these.statements.keys.toList();
 
-        // Unbekannte Parteien herausfiltern
-        // TODO: Möglichkeit, per API Parameter weitere Parteien der Auswahl hinzuzufügen
-        parties.removeWhere((p) => !commonParties.contains(p));
+        // Unbekannte oder nicht angefragte Parteien herausfiltern
+        List<String> requestedParties = [...commonParties];
+        if (reqParties.isNotEmpty)
+          requestedParties.addAll(reqParties.split(','));
+        parties.removeWhere((p) => !requestedParties.contains(p));
 
         // Entfernen von Parteien, die keine Antwort abgegeben haben
         parties.removeWhere((p) => these.statements[p].isEmpty);
         debugPrint('Parteien: $parties');
-        debugPrint('${parties.length}/${commonParties.length}');
+        debugPrint('${parties.length}/${requestedParties.length}');
 
         parties.shuffle();
         parties = parties.take(4).toList();
