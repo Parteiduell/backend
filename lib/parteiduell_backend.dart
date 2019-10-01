@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 2;
+const apiVersion = 3;
 
 List<QuizThese> quizFragen = [];
 
@@ -22,6 +22,8 @@ List<String> commonParties = [
   "AfD"
 ];
 
+Set<String> allParties = {};
+
 bool debugOutputEnabled = false;
 
 debugPrint(s) {
@@ -38,6 +40,11 @@ run({bool debug}) async {
     quizFragen.addAll(json
         .decode(file.readAsStringSync())
         .map<QuizThese>((m) => QuizThese.fromJson(m)));
+
+  // Auslesen aller möglichen Parteien
+  quizFragen.forEach(
+      (t) => t.statements.keys.toList().forEach((k) => allParties.add(k)));
+  print('All Parties: $allParties');
 
   print('Loaded. These Count: ${quizFragen.length}');
 
@@ -57,7 +64,9 @@ run({bool debug}) async {
         '[${DateTime.now().toIso8601String()}] ${request.method} from ${request.connectionInfo.remoteAddress} at ${request.uri}');
     try {
       await execute(request);
-    } catch (e) {
+    } catch (e, st) {
+      print('$e');
+      print('$st');
       request.response.statusCode = HttpStatus.internalServerError;
       request.response.close();
     }
@@ -165,6 +174,12 @@ execute(HttpRequest request) async {
       }
 
       request.response.write(json.encode(questions));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/allParties') {
+    if (request.method == 'GET') {
+      request.response.write(json.encode(allParties.toList()));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
