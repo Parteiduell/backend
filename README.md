@@ -1,8 +1,8 @@
 [![Jugend hackt](https://jhbadge.com/?year=2019&evt=ffm)](https://jugendhackt.org)
 
-# parteiduell_backend
+# parteiduell-backend
 
-Das Backend für [parteiduell_frontend](https://github.com/Jugendhackt/parteiduell-frontend/), verantwortlich für Erstellung und Ausliefern der Quizfragen.
+Das Backend für [parteiduell-frontend](https://github.com/Jugendhackt/parteiduell-frontend/), verantwortlich für Erstellung und Ausliefern der Quizfragen.
 
 ## Server lokal starten
 
