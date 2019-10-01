@@ -141,7 +141,8 @@ execute(HttpRequest request) async {
                 ]);
                 break;
               case 'FDP':
-                toReplace.insertAll(0, ['Freie Demokraten', 'Liberale', 'FDP']);
+                toReplace.insertAll(
+                    0, ['Freie Demokraten', 'Liberale', 'Liberalen', 'FDP']);
                 break;
               case 'GRÜNE':
                 toReplace.insertAll(
