@@ -157,6 +157,15 @@ execute(HttpRequest request) async {
               case 'AfD':
                 toReplace.insertAll(0, ['alternative für deutschland']);
                 break;
+              case 'DIE LINKE':
+                toReplace.insertAll(0, [
+                  'Die Linken',
+                  'Die Linke',
+                  'Linke',
+                  'Linken',
+                  'Die Linkspartei.PDS'
+                ]);
+                break;
             }
 
             for (var s in toReplace) {
