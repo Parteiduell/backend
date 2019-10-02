@@ -19,6 +19,27 @@ paths:
         required: false
         type: "number"
         default: 1
+      - name: "parties"
+        in: "query"
+        description: "Angefragte Parteien"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Ok"
+  /allParties:
+    get:
+      summary: Alle verfügbaren Parteien abrufen
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Ok"
+  /allSources:
+    get:
+      summary: Alle verfügbaren Datenquellen abrufen
+      produces:
+      - "application/json"
       responses:
         200:
           description: "Ok"
