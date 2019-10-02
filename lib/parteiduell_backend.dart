@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 3;
+const apiVersion = 4;
 
 List<QuizThese> quizFragen = [];
 
@@ -102,22 +102,34 @@ execute(HttpRequest request) async {
 
       List<QuizQuestion> questions = [];
 
-      for (QuizThese these in quizFragen.take(count)) {
+      for (int i = 0; i < count; i++) {
+        if (i >= quizFragen.length) break;
+        QuizThese these = quizFragen[i];
+
         var question = QuizQuestion(
             context: these.context, source: these.source, these: these.these);
 
         List<String> parties = these.statements.keys.toList();
 
         // Unbekannte oder nicht angefragte Parteien herausfiltern
-        List<String> requestedParties = [...commonParties];
-        if (reqParties.isNotEmpty)
+        List<String> requestedParties = [];
+        if (reqParties.isNotEmpty) {
           requestedParties.addAll(reqParties.split(','));
+        } else {
+          requestedParties.addAll(commonParties);
+        }
         parties.removeWhere((p) => !requestedParties.contains(p));
 
         // Entfernen von Parteien, die keine Antwort abgegeben haben
         parties.removeWhere((p) => these.statements[p].isEmpty);
         debugPrint('Parteien: $parties');
         debugPrint('${parties.length}/${requestedParties.length}');
+
+        // Wenn weniger als zwei Parteien übrig bleiben, wird eine andere These verwendet
+        if (parties.length < 2) {
+          count++;
+          continue;
+        }
 
         parties.shuffle();
         parties = parties.take(4).toList();
