@@ -23,6 +23,7 @@ List<String> commonParties = [
 ];
 
 Set<String> allParties = {};
+Set<String> allSources = {};
 
 bool debugOutputEnabled = false;
 
@@ -45,6 +46,10 @@ run({bool debug}) async {
   quizFragen.forEach(
       (t) => t.statements.keys.toList().forEach((k) => allParties.add(k)));
   print('All Parties: $allParties');
+
+  // Auslesen aller möglichen Datenquellen
+  quizFragen.forEach((t) => allSources.add(t.context));
+  print('All Sources: $allSources');
 
   print('Loaded. These Count: ${quizFragen.length}');
 
@@ -205,6 +210,12 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/allParties') {
     if (request.method == 'GET') {
       request.response.write(json.encode(allParties.toList()));
+    } else {
+      response.statusCode = HttpStatus.methodNotAllowed;
+    }
+  } else if (request.uri.path == '/allSources') {
+    if (request.method == 'GET') {
+      request.response.write(json.encode(allSources.toList()));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
