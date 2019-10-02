@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 4;
+const apiVersion = 5;
 
 List<QuizThese> quizFragen = [];
 
@@ -23,6 +23,14 @@ List<String> commonParties = [
 ];
 
 Set<String> allParties = {};
+
+List<String> commonSources = [
+  "Bundestagswahl 2005",
+  "Bundestagswahl 2009",
+  "Bundestagswahl 2013",
+  "Bundestagswahl 2017",
+];
+
 Set<String> allSources = {};
 
 bool debugOutputEnabled = false;
@@ -37,7 +45,7 @@ run({bool debug}) async {
   print('Loading DB...');
 
   // Einlesen der Daten
-  for (File file in Directory('data/release').listSync())
+  for (File file in Directory('data/wahlomat').listSync())
     quizFragen.addAll(json
         .decode(file.readAsStringSync())
         .map<QuizThese>((m) => QuizThese.fromJson(m)));
@@ -103,13 +111,26 @@ execute(HttpRequest request) async {
       bool filterWithTag =
           (request.uri.queryParameters['filterWithTag'] ?? 'false') == 'true';
       String reqParties = request.uri.queryParameters['parties'] ?? '';
-      quizFragen.shuffle();
+      String reqSources = request.uri.queryParameters['sources'] ?? '';
+
+      List<String> requestedSources = [];
+      if (reqSources.isNotEmpty) {
+        requestedSources.addAll(reqSources.split(','));
+      } else {
+        requestedSources.addAll(commonSources);
+      }
+
+      // Nicht gewünschte Quellen herausfiltern
+      List<QuizThese> quizFragenAuswahl = quizFragen
+          .where((t) => requestedSources.contains(t.context))
+          .toList();
+      quizFragenAuswahl.shuffle();
 
       List<QuizQuestion> questions = [];
 
       for (int i = 0; i < count; i++) {
-        if (i >= quizFragen.length) break;
-        QuizThese these = quizFragen[i];
+        if (i >= quizFragenAuswahl.length) break;
+        QuizThese these = quizFragenAuswahl[i];
 
         var question = QuizQuestion(
             context: these.context, source: these.source, these: these.these);
