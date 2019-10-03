@@ -239,15 +239,14 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/allParties') {
     if (request.method == 'GET') {
       String source = request.uri.queryParameters['source'] ?? '';
+      Set<String> sourcePartiesSet = {};
       if (source.isEmpty) {
         response.write(json.encode(allParties.toList()));
       } else {
-        if (allSources.contains(source)) {
-          response.write(json.encode(sourceParties[source].toList()));
-        } else {
-          response.statusCode = HttpStatus.badRequest;
-          response.write(json.encode({'error': 'source does not exist!'}));
+        for (String source in source.split(',')) {
+          sourcePartiesSet.addAll(sourceParties[source]);
         }
+        response.write(json.encode(sourcePartiesSet.toList()));
       }
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
