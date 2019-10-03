@@ -7,8 +7,19 @@ import 'package:parteiduell_backend/models/quizthese.dart';
 Map partyMap = {
   'BÜNDNIS 90/DIE GRÜNEN': 'GRÜNE',
   'Bündnis 90/ Die Grünen': 'GRÜNE',
+  'GRÜNE/B 90': 'GRÜNE',
+  'Bündnis 90/Die Grünen': 'GRÜNE',
+  'Die Grünen': 'GRÜNE',
   'DIE LINKE.PDS': 'DIE LINKE',
-  'CDU / CSU': 'CDU/CSU'
+  'Die LINKE': 'DIE LINKE',
+  'DIE LINKE.': 'DIE LINKE',
+  'Die Linke': 'DIE LINKE',
+  'CDU / CSU': 'CDU/CSU',
+  'CDU': 'CDU/CSU',
+  'CSU': 'CDU/CSU',
+  'DIE PARTEI': 'Die PARTEI',
+  'Die PARTEI ': 'Die PARTEI',
+  'PIRATEN ': 'PIRATEN',
 };
 
 run() {
