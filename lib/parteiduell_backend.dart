@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 6;
+const apiVersion = 7;
 
 List<QuizThese> quizFragen = [];
 
@@ -294,7 +294,7 @@ execute(HttpRequest request) async {
     }
   } else if (request.uri.path == '/version') {
     if (request.method == 'GET') {
-      request.response.write('API Version: $apiVersion');
+      request.response.write(json.encode({'version': apiVersion}));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
