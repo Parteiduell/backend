@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 5;
+const apiVersion = 6;
 
 List<QuizThese> quizFragen = [];
 
@@ -33,6 +33,8 @@ List<String> commonSources = [
 
 Set<String> allSources = {};
 
+Map<String, Set<String>> sourceParties = {};
+
 bool debugOutputEnabled = false;
 
 debugPrint(s) {
@@ -50,14 +52,20 @@ run({bool debug}) async {
         .decode(file.readAsStringSync())
         .map<QuizThese>((m) => QuizThese.fromJson(m)));
 
-  // Auslesen aller möglichen Parteien
-  quizFragen.forEach(
-      (t) => t.statements.keys.toList().forEach((k) => allParties.add(k)));
-  print('All Parties: $allParties');
-
   // Auslesen aller möglichen Datenquellen
   quizFragen.forEach((t) => allSources.add(t.context));
   print('All Sources: $allSources');
+
+  for (var source in allSources) {
+    sourceParties[source] = {};
+  }
+
+  // Auslesen aller möglichen Parteien
+  quizFragen.forEach((t) {
+    t.statements.keys.toList().forEach((k) => allParties.add(k));
+    t.statements.keys.toList().forEach((k) => sourceParties[t.context].add(k));
+  });
+  print('All Parties: $allParties');
 
   print('Loaded. These Count: ${quizFragen.length}');
 
@@ -230,7 +238,17 @@ execute(HttpRequest request) async {
     }
   } else if (request.uri.path == '/allParties') {
     if (request.method == 'GET') {
-      request.response.write(json.encode(allParties.toList()));
+      String source = request.uri.queryParameters['source'] ?? '';
+      if (source.isEmpty) {
+        response.write(json.encode(allParties.toList()));
+      } else {
+        if (allSources.contains(source)) {
+          response.write(json.encode(sourceParties[source].toList()));
+        } else {
+          response.statusCode = HttpStatus.badRequest;
+          response.write(json.encode({'error': 'source does not exist!'}));
+        }
+      }
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
