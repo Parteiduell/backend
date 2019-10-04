@@ -20,15 +20,17 @@ Map partyMap = {
   'DIE PARTEI': 'Die PARTEI',
   'Die PARTEI ': 'Die PARTEI',
   'PIRATEN ': 'PIRATEN',
-  "BVB / FREIE WÄHLER":"FREIE WÄHLER",
-  "FBI Freie Wähler":"FREIE WÄHLER",
-  "FBI":"FREIE WÄHLER",
-  "FBI/FWG":"FREIE WÄHLER",
-  "FBI/Freie Wähler":"FREIE WÄHLER",
-  "FREIE WÄHLER BREMEN":"FREIE WÄHLER",
-  "FREIE WÄHLER":"FREIE WÄHLER",
-  "FW FREIE WÄHLER":"FREIE WÄHLER",
-  "Freie Wähler Bayern":"FREIE WÄHLER",
+  "BVB / FREIE WÄHLER": "FREIE WÄHLER",
+  "FBI Freie Wähler": "FREIE WÄHLER",
+  "FBI": "FREIE WÄHLER",
+  "FBI/FWG": "FREIE WÄHLER",
+  "FBI/Freie Wähler": "FREIE WÄHLER",
+  "FREIE WÄHLER BREMEN": "FREIE WÄHLER",
+  "FREIE WÄHLER": "FREIE WÄHLER",
+  "FW FREIE WÄHLER": "FREIE WÄHLER",
+  "Freie Wähler Bayern": "FREIE WÄHLER",
+  "PDS": "DIE LINKE",
+  "ödp": "ÖDP"
 };
 
 run() {
