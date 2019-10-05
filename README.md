@@ -25,6 +25,18 @@ alternativ (Linux): `/usr/lib/dart/bin/pub get`
 
 Der Server läuft jetzt standardmäßig unter `localhost:3000`.
 
+## Binärdatei kompilieren
+
+Hierfür wird das Dart SDK in Version `2.6.0-dev.4.0` oder neuer benötigt.
+
+`dart2native bin/main.dart -o parteiduell_backend-linux-x64-release`
+
+Starten des Servers:
+
+`./parteiduell_backend-linux-x64-release`
+
+Der kompilierte Server benötigt natürlich noch die Daten im `data` Ordner.
+
 ## Wahlometer-Daten neu einlesen und parsen
 
 `dart bin/processing.dart`
