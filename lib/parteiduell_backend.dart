@@ -10,6 +10,7 @@ List<QuizThese> quizFragen = [];
 
 List scoreboard = [];
 
+// Bekannte Parteien, die standardmäßig verwendet werden
 List<String> commonParties = [
   "SPD",
   "CDU/CSU",
@@ -24,6 +25,7 @@ List<String> commonParties = [
 
 Set<String> allParties = {};
 
+// Quellen, die standardmäßig verwendet werden
 List<String> commonSources = [
   "Bundestagswahl 2005",
   "Bundestagswahl 2009",
@@ -37,6 +39,7 @@ Map<String, Set<String>> sourceParties = {};
 
 bool debugOutputEnabled = false;
 
+// Ausgabe von Debug-Infos
 debugPrint(s) {
   if (debugOutputEnabled) print(s.toString());
 }
@@ -80,6 +83,7 @@ run({bool debug}) async {
 
   print("Serving at ${server.address}:${server.port}");
 
+  // Beantworten jeder Anfrage
   await for (var request in server) {
     print(
         '[${DateTime.now().toIso8601String()}] ${request.method} from ${request.connectionInfo.remoteAddress} at ${request.uri}');
@@ -104,17 +108,24 @@ execute(HttpRequest request) async {
   response.headers.contentType =
       ContentType("application", "json", charset: "utf-8");
 
+  // Setzen von CORS-Headern
   response.headers.add('Access-Control-Allow-Origin', '*');
 
   if (request.uri.path == '/') {
     if (request.method == 'GET') {
-      request.response.redirect(
-          new Uri.https("github.com", "Jugendhackt/parteiduell-backend"));
+      // Redirecten zum Repository, wenn keine Methode angegeben ist.
+      request.response
+          .redirect(Uri.https("github.com", "Jugendhackt/parteiduell-backend"));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
   } else if (request.uri.path == '/list') {
     if (request.method == 'GET') {
+      //
+      // Abrufen von Quizfragen
+      //
+
+      // Übergebene Parameter
       int count = int.tryParse(request.uri.queryParameters['count'] ?? '') ?? 1;
       bool filterWithTag =
           (request.uri.queryParameters['filterWithTag'] ?? 'false') == 'true';
@@ -136,6 +147,7 @@ execute(HttpRequest request) async {
 
       List<QuizQuestion> questions = [];
 
+      // Solange Quizfragen aussuchen, bis die gewünschte Anzahl erreicht oder keine Thesen mehr übrig sind
       for (int i = 0; i < count; i++) {
         if (i >= quizFragenAuswahl.length) break;
         QuizThese these = quizFragenAuswahl[i];
@@ -165,6 +177,7 @@ execute(HttpRequest request) async {
           continue;
         }
 
+        // Parteien aussuchen und durchmischen
         parties.shuffle();
         parties = parties.take(4).toList();
 
@@ -174,6 +187,8 @@ execute(HttpRequest request) async {
 
         question.possibleAnswers = {};
         parties.shuffle();
+
+        // Generieren der Antwortmöglichkeiten
         for (String key in parties) {
           List toReplace = [key];
           String statement = these.statements[key];
@@ -237,6 +252,7 @@ execute(HttpRequest request) async {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
   } else if (request.uri.path == '/allParties') {
+    // Abrufen aller Parteien
     if (request.method == 'GET') {
       String source = request.uri.queryParameters['source'] ?? '';
       Set<String> sourcePartiesSet = {};
@@ -252,6 +268,7 @@ execute(HttpRequest request) async {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
   } else if (request.uri.path == '/allSources') {
+    // Abrufen aller Quellen
     if (request.method == 'GET') {
       request.response.write(json.encode(allSources.toList()));
     } else {
@@ -348,5 +365,6 @@ execute(HttpRequest request) async {
   } else {
     response.statusCode = HttpStatus.notFound;
   }
+  // Schließen der Verbindung
   await response.close();
 }
