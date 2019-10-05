@@ -34,14 +34,18 @@ Map partyMap = {
 };
 
 run() {
+  // Einlesen der Daten
   var content =
       json.decode(File('data/source/wahlometer-watch.json').readAsStringSync());
 
+  // Alle Wahlen bzw. Quellen durchgehen
   for (Map occasion in content) {
     var result = [];
 
+    // Alle Thesen dieser Wahl abarbeiten
     for (var these in occasion['theses']) {
       Map statements = {};
+      // Die Aussagen jeder Partei sammeln und normalisieren (Alternative Schreibweisen entfernen)
       for (Map position in these['positions']) {
         String party = position['party'];
 
@@ -49,6 +53,7 @@ run() {
         statements[party] = position['text'];
       }
 
+      // Neue These der Auswahl hinzufügen
       result.add(QuizThese(
           these: these['text'],
           statements: statements,
@@ -56,6 +61,7 @@ run() {
           context: occasion['occasion']['title']));
     }
 
+    // Alle Thesen mit antowrtmöglichkeiten in Datei speichern
     File('data/wahlomat/quizQuestions - ${occasion['occasion']['title']}.json')
         .writeAsStringSync(json.encode(result));
   }
