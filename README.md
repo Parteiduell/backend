@@ -8,6 +8,8 @@ Das Backend für [parteiduell-frontend](https://github.com/Jugendhackt/parteidue
 
 1. [Dart SDK installieren](https://dart.dev/get-dart)
 
+Getestet mit Dart `2.5.1`.
+
 2. Backend lokal clonen
 `git clone https://github.com/Jugendhackt/parteiduell-backend`
 
