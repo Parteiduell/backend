@@ -52,7 +52,7 @@ run() {
         if (partyMap.containsKey(party)) party = partyMap[party];
         statements[party] = position['text'];
       }
-
+      if (these['id'] == null) continue;
       // Neue These der Auswahl hinzufügen
       result.add(QuizThese(
           these: these['text'],
