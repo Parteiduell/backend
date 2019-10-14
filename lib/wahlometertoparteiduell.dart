@@ -56,6 +56,7 @@ run() {
       // Neue These der Auswahl hinzufügen
       result.add(QuizThese(
           these: these['text'],
+          id: these['id'],
           statements: statements,
           source: 'wahlometer.watch',
           context: occasion['occasion']['title']));

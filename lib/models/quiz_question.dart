@@ -1,5 +1,6 @@
 class QuizQuestion {
   String these;
+  String theseId;
   Map possibleAnswers;
   String answer;
   String source;
@@ -14,7 +15,8 @@ class QuizQuestion {
       this.source,
       this.context,
       this.statement,
-      this.possibleParties});
+      this.possibleParties,
+      this.theseId});
 
   QuizQuestion.fromJson(Map<String, dynamic> json) {
     these = json['these'];
@@ -23,6 +25,7 @@ class QuizQuestion {
     source = json['source'];
     context = json['context'];
     statement = json['statement'];
+    theseId = json['theseId'];
     possibleParties = json['possibleParties'].cast<String>();
   }
 
@@ -36,6 +39,7 @@ class QuizQuestion {
     data['source'] = this.source;
     data['context'] = this.context;
     data['statement'] = this.statement;
+    data['theseId'] = this.theseId;
     data['possibleParties'] = this.possibleParties;
     return data;
   }
