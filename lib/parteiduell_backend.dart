@@ -132,6 +132,8 @@ execute(HttpRequest request) async {
       String reqParties = request.uri.queryParameters['parties'] ?? '';
       String reqSources = request.uri.queryParameters['sources'] ?? '';
 
+      String id = request.uri.queryParameters['id'];
+
       List<String> requestedSources = [];
       if (reqSources.isNotEmpty) {
         requestedSources.addAll(reqSources.split(','));
@@ -143,6 +145,9 @@ execute(HttpRequest request) async {
       List<QuizThese> quizFragenAuswahl = quizFragen
           .where((t) => requestedSources.contains(t.context))
           .toList();
+      if (id != null) {
+        quizFragenAuswahl.retainWhere((t) => t.id == id);
+      }
       quizFragenAuswahl.shuffle();
 
       List<QuizQuestion> questions = [];
@@ -243,6 +248,7 @@ execute(HttpRequest request) async {
         }
         question.statement = question.possibleAnswers[party];
         question.possibleParties = parties;
+        question.theseId = these.id;
 
         questions.add(question);
       }
