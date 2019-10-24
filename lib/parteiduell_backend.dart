@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
-const apiVersion = 7;
+const apiVersion = 8;
 
 List<QuizThese> quizFragen = [];
 
@@ -260,7 +260,7 @@ execute(HttpRequest request) async {
   } else if (request.uri.path == '/allParties') {
     // Abrufen aller Parteien
     if (request.method == 'GET') {
-      String source = request.uri.queryParameters['source'] ?? '';
+      String source = request.uri.queryParameters['sources'] ?? '';
       Set<String> sourcePartiesSet = {};
       if (source.isEmpty) {
         response.write(json.encode(allParties.toList()));
