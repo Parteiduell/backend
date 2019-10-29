@@ -191,7 +191,6 @@ execute(HttpRequest request) async {
         // Generieren der Antwortmöglichkeiten
         for (String key in parties) {
           String statement = these.statements[key];
-          }
           if (statement.trim().length == 0)
             statement =
                 'Diese Partei hat keine Erklärung zu dieser These abgegeben.';
