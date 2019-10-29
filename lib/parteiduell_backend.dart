@@ -186,59 +186,11 @@ execute(HttpRequest request) async {
         parties.shuffle();
         parties = parties.take(4).toList();
 
-        String party = parties.first;
-
-        question.answer = party;
-
         question.possibleAnswers = {};
-        parties.shuffle();
 
         // Generieren der Antwortmöglichkeiten
         for (String key in parties) {
-          List toReplace = [key];
           String statement = these.statements[key];
-          if (key == party) {
-            switch (key) {
-              case 'CDU/CSU':
-                toReplace.insertAll(0, [
-                  'CDU / CSU',
-                  'CDU/CSU',
-                  RegExp(r'(?<!(Europäischen|Europäische) )Union'),
-                  'CDU und CSU',
-                  'CDU',
-                  'CSU'
-                ]);
-                break;
-              case 'FDP':
-                toReplace.insertAll(
-                    0, ['Freie Demokraten', 'Liberalen', 'Liberale', 'FDP']);
-                break;
-              case 'GRÜNE':
-                toReplace.insertAll(
-                    0, ['BÜNDNIS 90 / DIE GRÜNEN', 'BÜNDNIS 90/DIE GRÜNEN']);
-                break;
-              case 'PIRATEN':
-                toReplace.insertAll(0, ['PIRATENpartei']);
-                break;
-              case 'AfD':
-                toReplace.insertAll(0, ['alternative für deutschland']);
-                break;
-              case 'DIE LINKE':
-                toReplace.insertAll(0, [
-                  'Die Linken',
-                  'Die Linke',
-                  'Linken',
-                  'Linke',
-                  'Die Linkspartei.PDS'
-                ]);
-                break;
-            }
-
-            for (var s in toReplace) {
-              statement = statement.replaceAll(
-                  s is String ? RegExp('' + s + '', caseSensitive: false) : s,
-                  filterWithTag ? '<filtered>' : '█████');
-            }
           }
           if (statement.trim().length == 0)
             statement =
@@ -246,7 +198,6 @@ execute(HttpRequest request) async {
 
           question.possibleAnswers[key] = statement;
         }
-        question.statement = question.possibleAnswers[party];
         question.possibleParties = parties;
         question.theseId = these.id;
 
