@@ -2,7 +2,7 @@
 
 # parteiduell-backend
 
-Das Backend für [parteiduell-frontend](https://github.com/Jugendhackt/parteiduell-frontend/), verantwortlich für Erstellung und Ausliefern der Quizfragen.
+Das Backend für [parteiduell-frontend](https://github.com/parteiduell/frontend), verantwortlich für Erstellung und Ausliefern der Quizfragen.
 
 ## Server lokal starten
 
@@ -11,7 +11,7 @@ Das Backend für [parteiduell-frontend](https://github.com/Jugendhackt/parteidue
 Getestet mit Dart `2.5.1`.
 
 2. Backend lokal clonen
-`git clone https://github.com/Jugendhackt/parteiduell-backend`
+`git clone https://github.com/parteiduell/backend`
 
 3. Ordner wechseln
 `cd parteiduell-backend`
