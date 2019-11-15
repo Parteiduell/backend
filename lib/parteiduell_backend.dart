@@ -115,7 +115,7 @@ execute(HttpRequest request) async {
     if (request.method == 'GET') {
       // Redirecten zum Repository, wenn keine Methode angegeben ist.
       request.response
-          .redirect(Uri.https("github.com", "Jugendhackt/parteiduell-backend"));
+          .redirect(Uri.https("github.com", "Parteiduell/backend"));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
