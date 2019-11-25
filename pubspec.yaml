@@ -5,8 +5,11 @@ description: parteiduell_backend
 # author: redsolver <info@redsolver.net>
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: ">=2.5.0 <3.0.0"
 
 #dependencies:
 #  path: ^1.6.0
 
+dev_dependencies:
+  build_test:
+  build_runner:
