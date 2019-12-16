@@ -14,7 +14,7 @@ Getestet mit Dart `2.5.1`.
 `git clone https://github.com/parteiduell/backend`
 
 3. Ordner wechseln
-`cd parteiduell-backend`
+`cd backend`
 
 4. Projekt initialisieren
 `pub get` - 
