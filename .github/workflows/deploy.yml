@@ -5,21 +5,8 @@ on:
       - master
   pull_request:
 jobs:
-  test:
-    name: Build Test
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: pub get
-      - name: Run build
-        run: pub run build_runner build
-  deploy:
-    name: Deploy to production
-    needs: test
-    if: github.ref == 'refs/heads/master'
+  build:
+    name: Build
     runs-on: ubuntu-latest
     container:
       image: google/dart:latest
@@ -29,6 +16,22 @@ jobs:
         run: pub get
       - name: Building source
         run: dart2native bin/main.dart -o parteiduell_backend-linux-x64-release
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: build
+          path: parteiduell_backend-linux-x64-release
+  deploy:
+    name: Deploy to production
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download build artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: build
       - name: Deploy build
         env:
           SSH_HOST_KEY: ${{secrets.SSH_HOST_KEY}}
