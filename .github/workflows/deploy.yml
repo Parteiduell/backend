@@ -42,4 +42,5 @@ jobs:
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
           rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release data  root@parteiduell.de:/var/www/api.parteiduell.de/production/build --delete
-          ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release && sudo service parteiduell_backend restart
+          ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+          ssh root@parteiduell.de sudo systemctl restart parteiduell_backend
