@@ -38,5 +38,5 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
-          scp ./parteiduell_backend-linux-x64-release root@parteiduell.de:/var/www/api.parteiduell.de/production/build
+          rsync -az --progress -e ssh parteiduell_backend-linux-x64-release data  parteiduell.de:/var/www/api.parteiduell.de/production/build --delete
           ssh root@parteiduell.de sudo service parteiduell_backend restart
