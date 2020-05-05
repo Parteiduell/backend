@@ -1,0 +1,42 @@
+name: Build Test & Deploy
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  test:
+    name: Build Test
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pub get
+      - name: Run build
+        run: pub run build_runner build
+  deploy:
+    name: Deploy to production
+    needs: test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: pub get
+      - name: Building source
+        run: dart2native bin/main.dart -o parteiduell_backend-linux-x64-release
+      - name: Deploy build
+        env:
+          SSH_HOST_KEY: ${{secrets.SSH_HOST_KEY}}
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
+          scp ./parteiduell_backend-linux-x64-release root@parteiduell.de:/var/www/api.parteiduell.de/production/build
+          ssh root@parteiduell.de sudo service parteiduell_backend restart

@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import "package:path/path.dart" as path;
 
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
 const apiVersion = 8;
+
+final String __filename = Platform.script.path.replaceFirst('/', '');
+final String __dirname = path.dirname(__filename);
 
 List<QuizThese> quizFragen = [];
 
@@ -50,7 +54,7 @@ run({bool debug}) async {
   print('Loading DB...');
 
   // Einlesen der Daten
-  for (File file in Directory('data/wahlomat').listSync())
+  for (File file in Directory('/' + __dirname + '/data/wahlomat').listSync())
     quizFragen.addAll(json
         .decode(file.readAsStringSync())
         .map<QuizThese>((m) => QuizThese.fromJson(m)));
@@ -72,7 +76,8 @@ run({bool debug}) async {
 
   print('Loaded. These Count: ${quizFragen.length}');
 
-  scoreboard = json.decode(File('data/db/scoreboard.json').readAsStringSync());
+  scoreboard = json.decode(
+      File('/' + __dirname + '/data/db/scoreboard.json').readAsStringSync());
 
   // Server Port
   var portEnv = Platform.environment['PORT'];
@@ -99,7 +104,8 @@ run({bool debug}) async {
 }
 
 saveScoreboard() async {
-  File('data/db/scoreboard.json').writeAsString(json.encode(scoreboard));
+  File('/' + __dirname + '/data/db/scoreboard.json')
+      .writeAsString(json.encode(scoreboard));
 }
 
 // Bearbeitung der Anfragen
@@ -114,8 +120,7 @@ execute(HttpRequest request) async {
   if (request.uri.path == '/') {
     if (request.method == 'GET') {
       // Redirecten zum Repository, wenn keine Methode angegeben ist.
-      request.response
-          .redirect(Uri.https("github.com", "Parteiduell/backend"));
+      request.response.redirect(Uri.https("github.com", "Parteiduell/backend"));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }

@@ -11,3 +11,7 @@ build/
 doc/api/
 
 maintenance.html
+parteiduell_backend-linux-x64-release
+
+#macOS Stuff
+.DS_Store
