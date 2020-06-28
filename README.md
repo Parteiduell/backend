@@ -12,7 +12,12 @@ Getestet mit Dart `2.5.1`.
 2. Backend lokal clonen
 `git clone https://github.com/parteiduell/backend`
 
-3. Ordner wechseln
+3. Daten laden
+`git submodule init`
+
+`git submodule update`
+
+1. Ordner wechseln
 `cd backend`
 
 4. Projekt initialisieren
