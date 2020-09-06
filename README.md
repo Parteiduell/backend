@@ -12,19 +12,19 @@ Getestet mit Dart `2.5.1`.
 2. Backend lokal clonen
 `git clone https://github.com/parteiduell/backend`
 
-3. Daten laden
-`git submodule init`
-
-`git submodule update`
-
-1. Ordner wechseln
+3. Ordner wechseln
 `cd backend`
 
-4. Projekt initialisieren
+4. Daten laden
+```bash
+$ git submodule init
+$ git submodule update
+```
+5. Projekt initialisieren
 `pub get` - 
 alternativ (Linux): `/usr/lib/dart/bin/pub get`
 
-5. Server starten
+6. Server starten
 `dart bin/main.dart`
 
 Der Server läuft jetzt standardmäßig unter `localhost:3000`.
