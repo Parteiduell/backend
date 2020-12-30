@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import "package:path/path.dart" as path;
+import 'package:http/http.dart' as http;
 
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
 
 const apiVersion = 8;
-
-final String __filename = Platform.script.path.replaceFirst('/', '');
-final String __dirname = path.dirname(__filename);
 
 List<QuizThese> quizFragen = [];
 
@@ -51,13 +48,20 @@ debugPrint(s) {
 run({bool debug}) async {
   debugOutputEnabled = debug;
 
-  print('Loading DB...');
+  print('Downloading file index...');
+
+  final listRes = await http
+      .get('https://api.github.com/repos/Parteiduell/data/contents/wahlomat');
+  final list = json.decode(listRes.body);
 
   // Einlesen der Daten
-  for (File file in Directory('/' + __dirname + '/data/wahlomat').listSync())
-    quizFragen.addAll(json
-        .decode(file.readAsStringSync())
-        .map<QuizThese>((m) => QuizThese.fromJson(m)));
+  for (final item in list) {
+    print('Downloading file ${item['name']}...');
+    final res = await http.get(item['download_url']);
+
+    quizFragen.addAll(
+        json.decode(res.body).map<QuizThese>((m) => QuizThese.fromJson(m)));
+  }
 
   // Auslesen aller möglichen Datenquellen
   quizFragen.forEach((t) => allSources.add(t.context));
@@ -76,8 +80,8 @@ run({bool debug}) async {
 
   print('Loaded. These Count: ${quizFragen.length}');
 
-  scoreboard = json.decode(
-      File('/' + __dirname + '/data/db/scoreboard.json').readAsStringSync());
+  /* scoreboard = json.decode(
+      File('/' + __dirname + '/data/db/scoreboard.json').readAsStringSync()); */
 
   // Server Port
   var portEnv = Platform.environment['PORT'];
@@ -104,8 +108,8 @@ run({bool debug}) async {
 }
 
 saveScoreboard() async {
-  File('/' + __dirname + '/data/db/scoreboard.json')
-      .writeAsString(json.encode(scoreboard));
+  /* File('/' + __dirname + '/data/db/scoreboard.json')
+      .writeAsString(json.encode(scoreboard)); */
 }
 
 // Bearbeitung der Anfragen
