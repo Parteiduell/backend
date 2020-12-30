@@ -10,8 +10,6 @@ jobs:
       image: google/dart:latest
     steps:
       - uses: actions/checkout@v2
-      - name: "Fetching ParteiDuell Data"
-        uses: textbook/git-checkout-submodule-action@master
       - name: Install dependencies
         run: pub get
       - name: Building source
@@ -27,9 +25,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: "Fetching ParteiDuell Data"
-        uses: textbook/git-checkout-submodule-action@master      
+      - uses: actions/checkout@v2  
       - name: Download build artifact
         uses: actions/download-artifact@v1
         with:
@@ -43,7 +39,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
-          rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release data root@parteiduell.de:/var/www/api.parteiduell.de/production/build --delete
+          rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release --delete
       - name: Restart the backend service on the server
         run: |
           ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
