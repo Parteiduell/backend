@@ -15,16 +15,11 @@ Getestet mit Dart `2.5.1`.
 3. Ordner wechseln
 `cd backend`
 
-4. Daten laden
-```bash
-$ git submodule init
-$ git submodule update
-```
-5. Projekt initialisieren
+4. Projekt initialisieren
 `pub get` - 
 alternativ (Linux): `/usr/lib/dart/bin/pub get`
 
-6. Server starten
+5. Server starten
 `dart bin/main.dart`
 
 Der Server läuft jetzt standardmäßig unter `localhost:3000`.
