@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:parteiduell_backend/models/quiz_question.dart';
 import 'package:parteiduell_backend/models/quizthese.dart';
+import 'package:parteiduell_backend/version.dart';
 
 const apiVersion = 8;
 
@@ -276,7 +277,11 @@ execute(HttpRequest request) async {
     }
   } else if (request.uri.path == '/version') {
     if (request.method == 'GET') {
-      request.response.write(json.encode({'version': apiVersion}));
+      request.response.write(json.encode({
+        'version': apiVersion,
+        'apiVersion': apiVersion,
+        'versionName': versionName,
+      }));
     } else {
       response.statusCode = HttpStatus.methodNotAllowed;
     }
