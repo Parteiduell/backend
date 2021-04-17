@@ -1,9 +1,15 @@
 name: Build Test & Deploy
 on:
   push:
-  pull_request:
+  # release:
+  #   types: [created]
+  #   branches: main
+
 jobs:
   build:
+    env:
+      # RELEASE_FILE: parteiduell_backend-${{github.event.release.tag_name}}
+      RELEASE_FILE: "parteiduell-backend-test"
     name: Build
     runs-on: ubuntu-latest
     container:
@@ -13,12 +19,13 @@ jobs:
       - name: Install dependencies
         run: pub get
       - name: Building source
-        run: dart2native bin/main.dart -o parteiduell_backend-linux-x64-release
+        run: | 
+          dart2native bin/main.dart -o ${RELEASE_FILE}
       - name: Upload build artifact
         uses: actions/upload-artifact@v1
         with:
           name: build
-          path: parteiduell_backend-linux-x64-release
+          path: ${RELEASE_FILE}
   deploy:
     name: Deploy to production
     needs: build
@@ -39,8 +46,14 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
-          rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release --delete
-      - name: Restart the backend service on the server
-        run: |
-          ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
-          ssh root@parteiduell.de sudo systemctl restart parteiduell_backend
+          rsync -az --progress -e ssh ./build/${RELEASE_FILE}
+            
+        # rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release --delete
+
+      # - name: Preparing restart
+      #   run: |
+      #     ssh root@parteiduell.de rm /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+      # - name: Restart the backend service on the server
+      #   run: |
+      #     ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+      #     ssh root@parteiduell.de sudo systemctl restart parteiduell_backend
