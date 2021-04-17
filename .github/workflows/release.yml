@@ -46,7 +46,7 @@ jobs:
       - name: Download build artifact
         uses: actions/download-artifact@v1
         with:
-          name: build
+          name: ${{env.RELEASE_FILE}}
       - name: Deploy build
         env:
           SSH_HOST_KEY: ${{secrets.SSH_HOST_KEY}}
