@@ -38,6 +38,8 @@ jobs:
           asset_name: ${{env.RELEASE_FILE}}.tar.gz
           asset_content_type: application/octet-stream
   deploy:
+    env:
+      RELEASE_FILE: parteiduell_backend-${{github.event.release.tag_name}}
     name: Deploy to production
     needs: build
     runs-on: ubuntu-latest
