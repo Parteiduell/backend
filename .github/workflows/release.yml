@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: pub get
       - name: Preparing the Build
-        run: ./injectVersion.sh ${RELEASE_VERSION}
+        run: sh ./injectVersion.sh ${RELEASE_VERSION}
       - name: Building source
         run: dart2native bin/main.dart -o ${RELEASE_FILE}
       - name: Upload build artifact
