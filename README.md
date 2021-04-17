@@ -1,4 +1,5 @@
-![Build Test & Deploy](https://github.com/Parteiduell/backend/workflows/Build%20Test%20&%20Deploy/badge.svg?branch=main)
+[![Build Test & Deploy](https://github.com/Parteiduell/backend/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/Parteiduell/backend/actions/workflows/release.yml)
+
 # parteiduell-backend
 
 Das Backend für [parteiduell-frontend](https://github.com/parteiduell/frontend), verantwortlich für Erstellung und Ausliefern der Quizfragen.
