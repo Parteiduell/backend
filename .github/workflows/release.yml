@@ -58,7 +58,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
-          rsync -az --progress -e ssh ./build/${RELEASE_FILE} root@parteiduell.de:/var/www/api.parteiduell.de/production/build            
+          rsync -az --progress -e ssh ./${RELEASE_FILE}/${RELEASE_FILE} root@parteiduell.de:/var/www/api.parteiduell.de/production/build            
       - name: Preparing restart
         run: |
           ssh root@parteiduell.de rm /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
