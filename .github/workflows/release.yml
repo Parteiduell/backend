@@ -1,15 +1,15 @@
 name: Build Test & Deploy
 on:
   push:
-  # release:
-  #   types: [created]
-  #   branches: main
+  release:
+    types: [created]
+    branches: main
 
 jobs:
   build:
     env:
-      # RELEASE_FILE: parteiduell_backend-${{github.event.release.tag_name}}
-      RELEASE_FILE: "parteiduell-backend-test"
+      RELEASE_VERSION: ${{github.event.release.tag_name}}
+      RELEASE_FILE: parteiduell_backend-${{github.event.release.tag_name}}
     name: Build
     runs-on: ubuntu-latest
     container:
@@ -18,13 +18,14 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: pub get
+      - name: Preparing the Build
+        run: ./injectVersion.sh ${RELEASE_VERSION}
       - name: Building source
-        run: | 
-          dart2native bin/main.dart -o ${RELEASE_FILE}
+        run: dart2native bin/main.dart -o ${RELEASE_FILE}
       - name: Upload build artifact
         uses: actions/upload-artifact@v1
         with:
-          name: build
+          name: ${{env.RELEASE_FILE}}
           path: ${{env.RELEASE_FILE}}
   deploy:
     name: Deploy to production
@@ -46,14 +47,13 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
           echo "$SSH_HOST_KEY" > ~/.ssh/known_hosts
-          rsync -az --progress -e ssh ./build/${RELEASE_FILE} root@parteiduell.de:/var/www/api.parteiduell.de/production/build
-            
-        # rsync -az --progress -e ssh ./build/parteiduell_backend-linux-x64-release --delete
-
-      # - name: Preparing restart
-      #   run: |
-      #     ssh root@parteiduell.de rm /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
-      # - name: Restart the backend service on the server
-      #   run: |
-      #     ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
-      #     ssh root@parteiduell.de sudo systemctl restart parteiduell_backend
+          rsync -az --progress -e ssh ./build/${RELEASE_FILE} root@parteiduell.de:/var/www/api.parteiduell.de/production/build            
+      - name: Preparing restart
+        run: |
+          ssh root@parteiduell.de rm /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+          ssh root@parteiduell.de cp /var/www/api.parteiduell.de/production/build/${RELEASE_FILE} /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+          ssh root@parteiduell.de rm /var/www/api.parteiduell.de/production/build/${RELEASE_FILE}
+      - name: Restart the backend service on the server
+        run: |
+          ssh root@parteiduell.de chmod a+x /var/www/api.parteiduell.de/production/build/parteiduell_backend-linux-x64-release
+          ssh root@parteiduell.de sudo systemctl restart parteiduell_backend
