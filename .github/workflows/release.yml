@@ -26,6 +26,17 @@ jobs:
         with:
           name: ${{env.RELEASE_FILE}}
           path: ${{env.RELEASE_FILE}}
+      - name: Package Release
+        run: tar -zcf ${RELEASE_FILE}.tar.gz ${RELEASE_FILE} README.md
+      - name: Upload Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          asset_path: ${{env.RELEASE_FILE}}.tar.gz
+          upload_url: ${{github.event.release.upload_url}}
+          asset_name: ${{env.RELEASE_FILE}}.tar.gz
+          asset_content_type: application/octet-stream
   deploy:
     name: Deploy to production
     needs: build
