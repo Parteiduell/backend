@@ -1,6 +1,5 @@
 name: Build Test & Deploy
 on:
-  push:
   release:
     types: [created]
     branches: main
