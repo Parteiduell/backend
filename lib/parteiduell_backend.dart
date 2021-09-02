@@ -32,10 +32,11 @@ Set<String> allParties = {};
 
 // Quellen, die standardmäßig verwendet werden
 List<String> commonSources = [
-  "Bundestagswahl 2005",
+/*   "Bundestagswahl 2005",
   "Bundestagswahl 2009",
   "Bundestagswahl 2013",
-  "Bundestagswahl 2017",
+  "Bundestagswahl 2017", */
+  'Bundestagswahl 2021',
 ];
 
 Set<String> allSources = {};
